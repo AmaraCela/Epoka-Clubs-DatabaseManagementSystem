@@ -1,0 +1,114 @@
+CREATE TABLE Club (
+  ClubName VARCHAR(50) NOT NULL,
+  NumOfActivities INT NOT NULL,
+  PRIMARY KEY (ClubName)
+);
+
+CREATE TABLE Department (
+  DepartmentID CHAR(3) NOT NULL,
+  DepartmentName VARCHAR(100) NOT NULL,
+  PRIMARY KEY (DepartmentID)
+);
+
+CREATE TABLE Student (
+  StudentID CHAR(8) NOT NULL,
+  FirstName VARCHAR(15) NOT NULL,
+  LastName VARCHAR(15) NOT NULL,
+  GPA DECIMAL(3, 2) NOT NULL,
+  StudyProgram VARCHAR(50) NOT NULL,
+  EnrolledYear INT NOT NULL,
+  DepartmentID CHAR(3) NOT NULL,
+  PRIMARY KEY (StudentID),
+  FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+);
+
+CREATE TABLE Activity (
+  ActivityName VARCHAR(100) NOT NULL,
+  ActivityDate DATE NOT NULL,
+  ActivityLocation VARCHAR(25) NOT NULL,
+  ClubName VARCHAR(50) NOT NULL,
+  PRIMARY KEY (ActivityName, ActivityDate),
+  FOREIGN KEY (ClubName) REFERENCES Club(ClubName)
+);
+
+CREATE TABLE Attends (
+  StudentID CHAR(8) NOT NULL,
+  ActivityName VARCHAR(100) NOT NULL,
+  ActivityDate DATE NOT NULL,
+  PRIMARY KEY (StudentID, ActivityName, ActivityDate),
+  FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+  FOREIGN KEY (ActivityName, ActivityDate) REFERENCES Activity(ActivityName, ActivityDate)
+);
+
+CREATE TABLE Enrolled (
+  StudentID CHAR(8) NOT NULL,
+  ClubName VARCHAR(50) NOT NULL,
+  Certificate VARCHAR(50),
+  StudentRole VARCHAR(25) NOT NULL,
+  PRIMARY KEY (StudentID, ClubName),
+  FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+  FOREIGN KEY (ClubName) REFERENCES Club(ClubName)
+);
+
+CREATE TABLE Advisor (
+  AdvisorID CHAR(10) NOT NULL,
+  AdFirstName VARCHAR(15) NOT NULL,
+  AdLastName VARCHAR(15) NOT NULL,
+  DepartmentID CHAR(3) NOT NULL,
+  PRIMARY KEY (AdvisorID),
+  FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+);
+
+CREATE TABLE Administrates (
+  AdvisorID CHAR(10) NOT NULL,
+  ClubName VARCHAR(50) NOT NULL,
+  PRIMARY KEY (AdvisorID, ClubName),
+  FOREIGN KEY (AdvisorID) REFERENCES Advisor(AdvisorID),
+  FOREIGN KEY (ClubName) REFERENCES Club(ClubName)
+);
+INSERT INTO department VALUES('01', 'Department of Civil Engineering');
+INSERT INTO department VALUES('02', 'Department of Architecture');
+INSERT INTO department VALUES('03', 'Department of Computer Engineering');
+INSERT INTO department VALUES('04', 'Department of Economics');
+INSERT INTO department VALUES('05', 'Department of Banking and Finance');
+INSERT INTO department VALUES('06', 'Department of Business Administration');
+INSERT INTO department VALUES('07', 'Department of Political Science and International Relations');
+INSERT INTO department VALUES('08', 'Department of Law');
+INSERT INTO department VALUES('09', 'Center for European Studies');
+
+INSERT INTO student VALUES ('01012015','A','A',2.8,'ECO 3',2020,'03');
+INSERT INTO student VALUES ('02052045','B','B',3.0,'SWE 3',2020,'03');
+INSERT INTO student VALUES ('01052184','C','C',4.0,'BINF 2',2021,'06');
+INSERT INTO student VALUES ('01052185','D','D',3.5,'BINF 2',2021,'06');
+INSERT INTO student VALUES ('02021927','E','E',2.9,'ARCH 4',2019,'02');
+INSERT INTO student VALUES ('02012108','F','F',3.3,'CEN 3',2020,'03');
+
+INSERT INTO advisor VALUES ('0000000001','AA','AA','03');
+INSERT INTO advisor VALUES ('0000000002','BB','BB','07');
+INSERT INTO advisor VALUES ('0000000003','CC','CC','03');
+INSERT INTO advisor VALUES ('0000000004','DD','DD','03');
+
+INSERT INTO club VALUES ('Sensitive Society Club', '5');
+INSERT INTO club VALUES ('Google Developer Club', '7');
+INSERT INTO club VALUES ('Electronics Club', '6');
+
+INSERT INTO Activity VALUES ('The work behind great products', '11/13/2022', 'Location1', 'Google Developer Club');
+INSERT INTO Activity VALUES ('Women Techmakers', '12/22/2022', 'Location2', 'Sensitive Society Club');
+
+INSERT INTO attends VALUES('01012015', 'The work behind great products', '11/13/2022');
+INSERT INTO attends VALUES('02052045', 'The work behind great products', '11/13/2022');
+INSERT INTO attends VALUES('02021927', 'Women Techmakers', '12/22/2022');
+INSERT INTO attends VALUES('02012108', 'Women Techmakers', '12/22/2022');
+
+INSERT INTO administrates VALUES ('0000000001','Google Developer Club');
+INSERT INTO administrates VALUES ('0000000004','Google Developer Club');
+INSERT INTO administrates VALUES ('0000000002','Sensitive Society Club');
+INSERT INTO administrates VALUES ('0000000003','Electronics Club');
+
+INSERT INTO enrolled VALUES('01012015', 'Google Developer Club', NULL, 'Member');
+INSERT INTO enrolled VALUES('02052045', 'Electronics Club', 'Certificate Of Appreciation', 'Member');
+INSERT INTO enrolled VALUES('01052184', 'Sensitive Society Club', 'Certificate Of Appreciation', 'Member');
+INSERT INTO enrolled VALUES('01052185', 'Sensitive Society Club', 'Certificate Of 
+Appreciation', 'President');
+INSERT INTO enrolled VALUES('02021927', 'Sensitive Society Club', NULL, 'Member');
+INSERT INTO enrolled VALUES('02012108', 'Electronics Club', 'Certificate Of Appreciation', 'President');
