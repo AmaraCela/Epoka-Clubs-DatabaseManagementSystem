@@ -1,0 +1,127 @@
+# 1. list all students and clubs they belong to
+
+SELECT student.*, clubname, certificate, studentrole FROM Student
+INNER JOIN Enrolled
+ON Student.StudentID = Enrolled.StudentID
+
+# 2. list all students' ids, names, roles, club names
+
+SELECT student.studentid, firstname, lastname, studentrole, clubname FROM Student
+INNER JOIN Enrolled
+ON Student.StudentID = Enrolled.StudentID
+
+# 3. search students with specific name
+
+SELECT * FROM Student
+WHERE FirstName = 'NAME'
+
+# 4. search students with specific last name
+
+SELECT * FROM Student
+WHERE LastName = 'NAME'
+
+# 5. search students whose name starts with specific sequence
+
+SELECT * FROM Student
+WHERE FirstName LIKE 'SEQ%'
+
+# 6. search students whose GPA is greater than 3.0
+
+SELECT * FROM Student
+WHERE GPA > 3.0
+
+# 7. list all students sorted by GPA (descending)
+
+SELECT * FROM Student
+ORDER BY GPA DESC
+
+# 8. list all students sorted by GPA (ascending)
+
+SELECT * FROM Student
+ORDER BY GPA
+
+# 9. list all students sorted by enrollment year (ascending)
+
+SELECT * FROM Student
+ORDER BY EnrolledYear
+
+# 10. list all students' IDs, first names, last names and GPA that belong to a specific club sorted by GPA (descending)
+
+SELECT s.studentId, s.FirstName,s.LastName,s.GPA
+FROM student s, enrolled e
+WHERE s.studentId = e.studentId AND
+e.ClubName = "NAME"
+ORDER BY GPA DESC;
+
+# 11. list all students' IDs, first names, last names, GPA and enrolled year that belong to a specific club sorted by the enrolled year
+
+SELECT s.studentId, s.FirstName,s.LastName,s.GPA,s.EnrolledYear
+FROM student s, enrolled e
+WHERE s.studentId = e.studentId AND
+e.ClubName = "NAME"
+ORDER BY s.EnrolledYear DESC;
+
+# 12. list all students sorted by their first name (ascending)
+
+SELECT *
+FROM student
+ORDER BY firstname;
+
+# 13. list all student IDs and the number of certificates for each of them
+SELECT studentid, COUNT(*)
+FRom enrolled
+GROUP BY studentid
+HAVING certificate !="NULL";
+
+# 14. list all the advisors and the department they belong to
+
+SELECT advisor.*, departmentname FROM Advisor
+INNER JOIN Department
+ON advisor.departmentid = Department.DepartmentID;
+
+# 15. list all the activity names, the clubs that organize them and their location
+ 
+SELECT activityname, clubname, activitylocation
+FROM Activity;
+
+# 16. list the number of activities organized by each club
+
+SELECT  clubname, COUNT(activityname)
+FROM Activity
+GROUP BY clubname;
+
+# 17. list the advisors and the clubs they administrate
+
+SELECT a.adfirstname, a.adlastname, ad. clubname from Advisor a
+INNER JOIN Administrates ad
+ON a.AdvisorID = ad.AdvisorID;
+
+# 18. list the students' names, the activities they attend and the corresponding clubs organizing them
+
+SELECT firstname, lastname, Attends.activityname , clubname FROM Attends
+INNER JOIN Student, Activity
+ON Student.StudentID = Attends.StudentID AND Activity.ActivityName = Attends.ActivityName;
+
+# 19. list the department id, department name, and the number of students in each department 
+
+SELECT Department.departmentid, DepartmentName, COUNT(studentid) FROM Department 
+INNER JOIN Student
+ON Department.DepartmentID = Student.departmentid
+GROUP BY Student.Departmentid;
+
+# 20. list all the departments 
+
+SELECT *
+FROM department; 
+
+# 21. create a virtual table to display the year of study of the students, which is a derived attribute from current year and enrolled year
+
+CREATE VIEW year_of_study AS
+SELECT firstname, lastname, 2023 - enrolledyear AS yearOfStudy
+FROM Student;
+
+# 22. display the content of the virtual table year_of_study
+
+SELECT * 
+FROM year_of_study;
+
